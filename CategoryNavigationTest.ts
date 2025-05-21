@@ -3,34 +3,45 @@ const { waitForElementVisible } = require('./waits');
 
 (async function cartOperationsTest() {
   let driver = await new Builder().forBrowser('chrome').build();
+  
   try {
     await driver.get('https://bookbox.ch/');
-
+   
     // Add first book
     await waitForElementVisible(driver, By.css('.add_to_cart_button'));
+    
     let buttons = await driver.findElements(By.css('.add_to_cart_button'));
+    
     await buttons[0].click();
+    
     await buttons[1].click();
-
+    
     // Go to cart
     await waitForElementVisible(driver, By.css('.cart-icon a'));
     await driver.findElement(By.css('.cart-icon a')).click();
-
+    
     // Remove one book
     const removeBtn = By.css('.remove');
+  
     await waitForElementVisible(driver, removeBtn);
+    
     await driver.findElement(removeBtn).click();
 
     // Wait for update and verify count
-    const cartItems = await driver.findElemeimport { test, expect } from '@playwright/test';
+    const cartItems = await driver.findElements(By.css('.cart_item'));
+    
+    import { test, expect } from '@playwright/test';
+    
     import {
       goToHomepage,
       hoverBooksMenu,
       clickBelletristik
     } from './helpers';
     
+    
     test('Category navigation and book count verification', async ({ page }) => {
-      // Step 1: Go to the homepage
+     
+      // Step 1: Go to homepage
       await goToHomepage(page);
     
       // Step 2: Hover over "Bücher" menu
@@ -53,12 +64,14 @@ const { waitForElementVisible } = require('./waits');
       // Step 7: Compare expected count from filter and actual visible count
       expect(actualCount).toBe(expectedCount);
     });
-    nts(By.css('.cart_item'));
+    
     console.log(`Remaining items in cart: ${cartItems.length}`);
 
-  } finally {
+  } catch (error) {
+    console.error('Error during cart operations test:', error);
+  
+  finally {
     await driver.quit();
   }
 })();
 
-cartOperationsTest();
